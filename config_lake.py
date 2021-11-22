@@ -26,7 +26,7 @@ action_space_dim = env.nA # action space dimension
 state_space_dim = env.nS # state space dimension
 eta = 50. # param for exponentiated gradient algorithm
 initial_states = [[0]] #The only initial state is [1,0...,0]. In general, this should be a list of initial states
-non_terminal_states = np.nonzero(((env.desc == 'S') + (env.desc == 'F')).reshape(-1))[0] # Used for dynamic programming. this is an optimization to make the algorithm run faster. In general, you may not have this
+#non_terminal_states = np.nonzero(((env.desc == 'S') + (env.desc == 'F')).reshape(-1))[0] # Used for dynamic programming. this is an optimization to make the algorithm run faster. In general, you may not have this
 max_number_of_main_algo_iterations = 100 # After how many iterations to cut off the main algorithm
 model_type = 'mlp'
 old_policy_name = 'pi_old_map_size_{0}_{1}.h5'.format(map_size, model_type)

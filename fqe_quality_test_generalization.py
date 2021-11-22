@@ -10,7 +10,8 @@ from fitted_off_policy_evaluation import FittedQEvaluation
 from exact_policy_evaluation import ExactPolicyEvaluator
 from inverse_propensity_scoring import InversePropensityScorer
 from exact_policy_evaluation import ExactPolicyEvaluator
-from optimal_policy import DeepQLearning
+#from optimal_policy import DeepQLearning
+from DQN import DeepQLearning
 from print_policy import PrintPolicy
 from keras.models import load_model
 import pandas as pd

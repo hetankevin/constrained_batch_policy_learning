@@ -71,7 +71,7 @@ class PrintPolicy(object):
 			row = []
 			for j in range(2*len(direction_grid[0])+1):
 				if (i % 2) == 1 & (j % 2) == 1:
-					row.append(direction_grid[(i-1)/2][(j-1)/2])
+					row.append(direction_grid[int((i-1)/2)][int((j-1)/2)])
 				elif (j % 2) == 0:
 					row.append('|')
 				else:
@@ -84,12 +84,12 @@ class PrintPolicy(object):
 			for j in range(2*len(Q_grid[0])+1):
 				if (i % 2) == 1 & (j % 2) == 1:
 					try:
-						val = float(Q_grid[(i-1)/2][(j-1)/2])
+						val = float(Q_grid[int((i-1)/2)][int((j-1)/2)])
 						sign = '+'*(val > 0) + '-'*(val<=0)
 						val = str(np.abs(round(val,2)))
 						row.append(sign + val)
 					except:
-						val = Q_grid[(i-1)/2][(j-1)/2]
+						val = Q_grid[int((i-1)/2)][int((j-1)/2)]
 						row.append(val)
 				elif (j % 2) == 0:
 					row.append('|')

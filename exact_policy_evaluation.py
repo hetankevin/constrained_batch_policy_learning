@@ -1,7 +1,8 @@
 
 
 import numpy as np
-import scipy.signal as signal
+#import scipy.signal as signal
+import scipy
 from replay_buffer import Buffer
 import os
 
@@ -234,7 +235,7 @@ class ExactPolicyEvaluator(object):
         '''
         Calculate discounted sum of costs
         '''
-        y = signal.lfilter([1], [1, -discount], x=costs[::-1])
+        y = scipy.signal.lfilter([1], [1, -discount], x=costs[::-1])
         return y[::-1][0]
 
 class Monitor(object):
