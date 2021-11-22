@@ -93,9 +93,9 @@ def main(env_name, headless):
 
 
         calculate_gap = True # Run Main algo. If False, it skips calc of primal-dual gap
-        infinite_loop = True # Stop script if reached primal-dual gap threshold
-        policy_improvement_name = 'car_policy_improvement.h5'
-        results_name = 'car_results.csv'
+        infinite_loop = False # Stop script if reached primal-dual gap threshold
+        policy_improvement_name = 'lake_policy_improvement_new.h5'
+        results_name = 'lake_results_new.csv'
     elif env_name == 'car':
         # env = gym.make('CarRacing-v0')
         init_seed = 2
@@ -163,7 +163,7 @@ def main(env_name, headless):
         prob = [1/float(action_space_dim)]*action_space_dim # Probability with which to explore space when deviating from old policy
 
         calculate_gap = False # Run Main algo. If False, it skips calc of primal-dual gap
-        infinite_loop = True # Stop script if reached primal-dual gap threshold
+        infinite_loop = False # Stop script if reached primal-dual gap threshold
         policy_improvement_name = 'car_policy_improvement.h5'
         results_name = 'car_results.csv'
 
