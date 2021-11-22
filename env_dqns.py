@@ -67,12 +67,12 @@ class CarDQN(DeepQLearning):
         Biased (toward movement) random
         '''
         if self.gas_actions is None:
-            self.gas_actions = {key:val[1] == 1 and val[2] == 0 for key,val in self.action_space_map.iteritems()}
+            self.gas_actions = {key:val[1] == 1 and val[2] == 0 for key,val in self.action_space_map.items()}
 
-        action_weights = 14. * np.array(self.gas_actions.values()) + 1.0
+        action_weights = 14. * np.array(list(self.gas_actions.values())) + 1.0
         action_weights /= np.sum(action_weights)
 
-        return np.random.choice(self.gas_actions.keys(), p=action_weights)
+        return np.random.choice(list(self.gas_actions.keys()), p=action_weights)
         # return np.random.choice(self.action_space_dim)
 
     def epsilon(self, epoch=None, total_steps=None):

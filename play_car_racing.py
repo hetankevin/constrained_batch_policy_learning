@@ -30,7 +30,7 @@ if __name__=="__main__":
         restart = False
         while True:
             s, r, done, info = env.step(a)
-            print r[1][1], r[1][3], r[1][4]
+            print(r[1][1], r[1][3], r[1][4])
             total_reward += r[0]
             if steps % 200 == 0 or done:
             	pass
@@ -43,5 +43,5 @@ if __name__=="__main__":
             if not record_video: # Faster, but you can as well call env.render() every time to play full window.
                 env.render()
             if done or restart or float(env.tile_visited_count)>139: break
-        print steps, float(env.tile_visited_count), len(env.track), float(env.tile_visited_count)/len(env.track)
+        print(steps, float(env.tile_visited_count), len(env.track), float(env.tile_visited_count)/len(env.track))
     env.close()

@@ -70,7 +70,7 @@ class MDPApproximator(LakeNN):
 
         # Actually fitting R, not Q_k
         self.Q_k = self.model #init_Q(model_type=self.model_type)
-        X_a = np.array(zip(dataset['x'],dataset['a']))#dataset['state_action']
+        X_a = np.array(list(zip(dataset['x'],dataset['a'])))#dataset['state_action']
         x_prime = dataset['x_prime']
         index_of_skim = self.skim(X_a, x_prime)
         self.fit(X_a[index_of_skim], dataset['cost'][index_of_skim], batch_size=len(index_of_skim), verbose=0, epochs=1000)
@@ -113,7 +113,7 @@ class MDPApproximator(LakeNN):
         #Approximated dynamics
         if tuple([x,a]) in self.P:
             try:
-                state = np.random.choice(self.P[(x,a)].keys(), p=self.P[(x,a)].values())
+                state = np.random.choice(list(self.P[(x,a)].keys()), p=list(self.P[(x,a)].values()))
             except:
                 import pdb; pdb.set_trace()
             done = False

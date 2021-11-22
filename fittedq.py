@@ -45,7 +45,7 @@ class LakeFittedQIteration(FittedAlgo):
         dataset_costs = dataset['cost'][index_of_skim]
         dones = dataset['done'][index_of_skim]
         
-        for k in tqdm(range(self.max_epochs), desc=desc):
+        for k in tqdm(list(range(self.max_epochs)), desc=desc):
             
             # {((x,a), c+gamma*min_a Q(x',a))}
             costs = dataset_costs + self.gamma*self.Q_k.min_over_a(x_prime)[0]*(1-dones.astype(int))
@@ -113,11 +113,11 @@ class CarFittedQIteration(FittedAlgo):
         self.Q_k.copy_over_to(self.Q_k_minus_1)
         values = []
 
-        for k in tqdm(range(self.max_epochs), desc=desc):
+        for k in tqdm(list(range(self.max_epochs)), desc=desc):
             batch_size = 64
             
             dataset_length = len(dataset)
-            perm = np.random.permutation(range(dataset_length))
+            perm = np.random.permutation(list(range(dataset_length)))
             eighty_percent_of_set = int(1.*len(perm))
             training_idxs = perm[:eighty_percent_of_set]
             validation_idxs = perm[eighty_percent_of_set:]

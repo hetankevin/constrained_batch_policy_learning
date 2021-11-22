@@ -7,6 +7,7 @@ from model import Model
 import numpy as np
 from tqdm import tqdm
 import scipy.signal as signal
+from functools import reduce
 
 class InversePropensityScorer(object):
     def __init__(self, env, state_space_dim, action_space_dim, grid_shape):
@@ -227,7 +228,7 @@ class InversePropensityScorer(object):
         Q_hat = {}
         V_hat = {}
 
-        print mdp.V(pi_new, 0)
+        print(mdp.V(pi_new, 0))
         for idx, episode in enumerate(dataset.episodes):
             cost = w_t[idx]*episode['cost']
             first_term = self.discounted_sum(cost, gamma)

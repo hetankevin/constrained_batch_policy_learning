@@ -56,16 +56,16 @@ policy_old = None
 old_policy_path = os.path.join(model_dir, 'pi_old_map_size_{0}_{1}.h5'.format(map_size[0], dqn_model_type))
 policy_old = LakeDQN(env, gamma, model_type=dqn_model_type,position_of_holes=position_of_holes,position_of_goals=position_of_goals, min_epsilon=0, initial_epsilon=1, epsilon_decay_steps=100)
 if not os.path.isfile(old_policy_path):
-    print 'Learning a policy using DQN'
+    print('Learning a policy using DQN')
     policy_old.learn()
     policy_old.Q.model.save(old_policy_path)
     # print policy_old.Q.evaluate(render=True)
 else:
-    print 'Loading a policy'
+    print('Loading a policy')
     policy_old.Q.model = load_model(old_policy_path)
     # print policy_old.Q.evaluate(render=True)
 
-print 'Old Policy'
+print('Old Policy')
 map_size = [map_size[0]]*2
 policy_printer = PrintPolicy(size=map_size, env=env)
 policy_printer.pprint(policy_old)
@@ -91,7 +91,7 @@ for i in range(map_size[0]*map_size[1]):
         model_dict[i] = np.random.randint(action_space_dim)
 policy = FixedPolicy(model_dict, action_space_dim, policy_evaluator)
 
-print 'Evaluate this policy:'
+print('Evaluate this policy:')
 policy_printer.pprint(policy)
 #### Problem setup
 
@@ -160,12 +160,12 @@ def run_trial(idxs, dataset, policy_old, policy, percentage, epsilon, fqi, fqe, 
                 idx = 0
                 while 1:
                     idx += 1
-                    new_episode = {k:val[:idx] for k,val in episode.iteritems()}
+                    new_episode = {k:val[:idx] for k,val in episode.items()}
                     sampled_episodes.append(new_episode)
                     num_unique = len(np.unique(np.hstack([np.hstack([x['x'] for x in sampled_episodes]).reshape(1,-1).T, np.hstack([x['a'] for x in sampled_episodes]).reshape(1,-1).T]), axis=0))
                     sampled_episodes.pop()
                     if (float(num_unique)/maximum) >= percentage:
-                        new_episode = {k:val[:max(1,(idx-1))] for k,val in episode.iteritems()}
+                        new_episode = {k:val[:max(1,(idx-1))] for k,val in episode.items()}
                         sampled_episodes.append(new_episode)
                         num_unique = len(np.unique(np.hstack([np.hstack([x['x'] for x in sampled_episodes]).reshape(1,-1).T, np.hstack([x['a'] for x in sampled_episodes]).reshape(1,-1).T]), axis=0))
                         break
@@ -180,9 +180,9 @@ def run_trial(idxs, dataset, policy_old, policy, percentage, epsilon, fqi, fqe, 
     dataset['cost'] = np.hstack([x['cost'] for x in dataset.episodes])
     dataset['done'] = np.hstack([x['done'] for x in dataset.episodes])
 
-    print 'Number of Episodes: ', len(sampled_episodes)
-    print 'Num unique: ', num_unique
-    print 'Percentage of data: ', float(num_unique)/maximum
+    print('Number of Episodes: ', len(sampled_episodes))
+    print('Num unique: ', num_unique)
+    print('Percentage of data: ', float(num_unique)/maximum)
     # print np.unique(np.hstack([np.hstack([x['x'] for x in sampled_episodes]).reshape(1,-1).T, np.hstack([x['a'] for x in sampled_episodes]).reshape(1,-1).T]), axis=0)
 
     # Importance Sampling
@@ -196,7 +196,7 @@ def run_trial(idxs, dataset, policy_old, policy, percentage, epsilon, fqi, fqe, 
 
 
     # evaluated = 0
-    print exact-exact, evaluated-exact, approx_ips-exact, exact_ips-exact, approx_pdis-exact, exact_pdis-exact, dr-exact, wdr-exact, am-exact
+    print(exact-exact, evaluated-exact, approx_ips-exact, exact_ips-exact, approx_pdis-exact, exact_pdis-exact, dr-exact, wdr-exact, am-exact)
     dataset.episodes = all_episodes
     dataset['x'] = np.hstack([x['x'] for x in dataset.episodes])
     dataset['a'] = np.hstack([x['a'] for x in dataset.episodes])
@@ -217,7 +217,7 @@ def FQE(dataset, policy, gamma=.9, epsilon=0.001):
     data = np.unique(data, axis=0)
     pi_of_x_prime = policy(data[:,2])
     data = np.hstack([data, pi_of_x_prime.reshape(1,-1).T]).astype(int)
-    print 'Num unique in FQE: ', data.shape[0]
+    print('Num unique in FQE: ', data.shape[0])
     
     while True:
         U = U1.copy()
@@ -236,7 +236,7 @@ def get_dataset(N, epsilon, exact_evaluation):
     num_hole = 0
     dataset = Dataset(1, (1,), (3,))
     policy_old.Q.model = load_model(old_policy_path)
-    for i in tqdm(range(N)):
+    for i in tqdm(list(range(N))):
         x = env.reset()
         dataset.start_new_episode(x)
         done = False
@@ -275,11 +275,11 @@ def get_dataset(N, epsilon, exact_evaluation):
     dataset['x'] = dataset['frames'][dataset['prev_states']]
     dataset['x_prime'] = dataset['frames'][dataset['next_states']]
 
-    print 'Epsilon %s. Number goals: %s. Number holes: %s.' % (epsilon, num_goal, num_hole)
-    print 'Distribution:' 
-    print np.histogram(dataset['x_prime'], bins=np.arange(map_size[0]*map_size[1]+1)-.5)[0].reshape(map_size)
-    print len(dataset['x'])
-    print len(np.unique(np.hstack([dataset['x'].reshape(1,-1).T,  dataset['a'].reshape(1,-1).T, dataset['x_prime'].reshape(1,-1).T ]), axis=0))
+    print('Epsilon %s. Number goals: %s. Number holes: %s.' % (epsilon, num_goal, num_hole))
+    print('Distribution:') 
+    print(np.histogram(dataset['x_prime'], bins=np.arange(map_size[0]*map_size[1]+1)-.5)[0].reshape(map_size))
+    print(len(dataset['x']))
+    print(len(np.unique(np.hstack([dataset['x'].reshape(1,-1).T,  dataset['a'].reshape(1,-1).T, dataset['x_prime'].reshape(1,-1).T ]), axis=0)))
     
     which = 'g'
     dataset.set_cost(which,0)
@@ -301,7 +301,7 @@ def get_dataset(N, epsilon, exact_evaluation):
     dataset['cost'] = dataset['cost'].reshape(-1) 
     dataset['done'] = dataset['done'].reshape(-1) 
 
-    for low_, high_ in tqdm(zip(dones[:-1], dones[1:])):
+    for low_, high_ in tqdm(list(zip(dones[:-1], dones[1:]))):
         new_episode ={
             'x': dataset['x'][low_:high_].reshape(-1),
             'a': dataset['a'][low_:high_].reshape(-1),
@@ -352,10 +352,10 @@ for epsilon, group in df.groupby('epsilon'):
     del means['trial_num']
     del stds['trial_num']
 
-    print '*'*20
-    print 'Epsilon: %s' % epsilon
-    print means
-    print stds
+    print('*'*20)
+    print('Epsilon: %s' % epsilon)
+    print(means)
+    print(stds)
 
     fig, ax = plt.subplots(1)
     colors = ['red', 'green', 'blue']

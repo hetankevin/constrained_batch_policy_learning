@@ -68,7 +68,7 @@ ax1 = fig.add_subplot(grid[0:4, :2])
 # fig, ax1 = plt.subplots()
 ax1.grid(alpha=.35)
 max_iterations = 27
-iterations = range(len(data['g_eval'][0][:max_iterations]))
+iterations = list(range(len(data['g_eval'][0][:max_iterations])))
 colors = color_gen()
 constraint_names = ['Braking', 'Center of Lane']
 constraint_upper_bound = [5.8, 85.]#[1.5, 5.]
@@ -103,8 +103,8 @@ def derandomize(data, constraints, min_iteration):
 df_derandom = derandomize(data, np.array(constraint_upper_bound)*.8, 0)
 
 legend = []
-car_color = colors.next()
-derandom_color = colors.next()
+car_color = next(colors)
+derandom_color = next(colors)
 c_values = np.array(data['c_eval_actuals'])[:max_iterations,-10:,:] # shape = (iteration #, k, performance)
 last = np.cumsum(c_values[:,-1,0])/np.arange(1,1+len(c_values[:,-1,0]))#*100
 evaluation = np.array(pd.DataFrame(c_values[:,-1,0]).expanding().mean()).reshape(-1)
@@ -130,7 +130,7 @@ legend.append( mlines.Line2D([], [], color=derandom_color, linestyle='-',
 
 ## Baselines
 	# LSPI
-lspi_color = colors.next()
+lspi_color = next(colors)
 lspi = np.array(LSPI.iloc[:,0])
 evaluation = np.array(pd.DataFrame(lspi).expanding().mean()).reshape(-1)
 lines.append( ax1.plot(iterations, evaluation, color = lspi_color,markersize=7,linestyle='-' , label='Exact') )
@@ -138,7 +138,7 @@ legend.append( mlines.Line2D([], [], color=lspi_color, linestyle='-' ,
                       markersize=7, label='Percent of Track Covered') )
 
 	# DQN
-dqn_color = colors.next()
+dqn_color = next(colors)
 dqn = np.array([DQN[0]]*len(last))
 evaluation = np.array(pd.DataFrame(dqn).expanding().mean()).reshape(-1)
 lines.append( ax1.plot(iterations, evaluation, color = dqn_color,markersize=7,linestyle='-' , label='Exact') )
@@ -146,7 +146,7 @@ legend.append( mlines.Line2D([], [], color=dqn_color, linestyle='-' ,
                       markersize=7, label='Percent of Track Covered') )
 
 	# Pi_D
-pi_d_color = colors.next()
+pi_d_color = next(colors)
 evaluation = np.mean(discounted_costs[:,0]).reshape(-1)
 lines.append( ax1.plot(iterations, [evaluation]*len(iterations), color = pi_d_color,markersize=7,linestyle='-' , label='Exact') )
 legend.append( mlines.Line2D([], [], color=pi_d_color, linestyle='-' ,
@@ -216,7 +216,7 @@ axs.append(fig.add_subplot(grid[:3, 2:]))
 axs.append(fig.add_subplot(grid[3:, 2:]))
 
 
-for idx in data['g_eval'].keys():
+for idx in list(data['g_eval'].keys()):
 	colors = color_gen()
 	ax = axs[idx]
 	ax.grid(alpha=.35)

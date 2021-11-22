@@ -4,20 +4,20 @@ class PrintPolicy(object):
 	def __init__(self, size=[4,4], env=None):
 		self.mapping = {0:'<', 1:'v', 2:'>', 3:'^'}
 		self.size = size
-		self.action_space_dim = len(self.mapping.keys())
+		self.action_space_dim = len(list(self.mapping.keys()))
 		self.env = env
 
 	def pprint(self, *args):
 		if len(args) == 1:
 			pi = args[0]
 			size = self.size[0]*self.size[1]
-			if not isinstance(pi,(list,)):
+			if not isinstance(pi,list):
 				pi = [pi]
 
 			if len(pi) == 0: return
 	
 		
-			states = np.array(range(size)).reshape(1,-1).T
+			states = np.array(list(range(size))).reshape(1,-1).T
 			actions_for_each_pi = np.hstack([[np.eye(self.action_space_dim)[p.min_over_a(np.arange(size))[1]] for p in pi]])
 			policy = np.hstack([states, np.argmax(actions_for_each_pi.mean(0), 1).reshape(1,-1).T])
 
@@ -76,8 +76,8 @@ class PrintPolicy(object):
 					row.append('|')
 				else:
 					row.append('_')
-			print ' '.join(row)
-		print
+			print(' '.join(row))
+		print()
 
 		for i in range(2*len(Q_grid)+1):
 			row = []
@@ -95,5 +95,5 @@ class PrintPolicy(object):
 					row.append('|')
 				else:
 					row.append('_____')
-			print ' '.join(row)
-		print
+			print(' '.join(row))
+		print()

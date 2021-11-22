@@ -62,7 +62,7 @@ for epsilon, group in df.groupby('epsilon'):
     # import pdb; pdb.set_trace()
     small_value = 1e-10
     exact = group['approx_pdis'].iloc[0]+small_value
-    print list(group.apply(lambda x: x+exact).groupby('num_trajectories'))[-1][1][['trial_num', 'exact', 'fqe']]
+    print(list(group.apply(lambda x: x+exact).groupby('num_trajectories'))[-1][1][['trial_num', 'exact', 'fqe']])
     means = group.apply(lambda x: x+exact).groupby('num_trajectories').mean()
     stds = group.apply(lambda x: x+exact).groupby('num_trajectories').std()
 
@@ -76,10 +76,10 @@ for epsilon, group in df.groupby('epsilon'):
     del lower_quants['trial_num']
     del upper_quants['trial_num']
 
-    print '*'*20
-    print 'Epsilon: %s' % epsilon
-    print means
-    print stds
+    print('*'*20)
+    print('Epsilon: %s' % epsilon)
+    print(means)
+    print(stds)
 
     fig, ax = plt.subplots(1)
     colors = color_gen()
@@ -99,18 +99,18 @@ for epsilon, group in df.groupby('epsilon'):
 
         col = ['Fitted Q Evaluation (FQE)', 'Per-Decision IS (PDIS)', 'Doubly Robust (DR)', 'Weighted Doubly Robust (WDR)', 'AM'][i]
         if (i == 0) or (i == 3):
-            custom_plot(x*100, mu, lower_bound, upper_bound, plot_band=True,zorder=11, marker='o', label=col,  color=colors.next())
+            custom_plot(x*100, mu, lower_bound, upper_bound, plot_band=True,zorder=11, marker='o', label=col,  color=next(colors))
         else:
-            custom_plot(x*100, mu, lower_bound, upper_bound, plot_band=False,zorder=11, marker='o', label=col,  color=colors.next())
+            custom_plot(x*100, mu, lower_bound, upper_bound, plot_band=False,zorder=11, marker='o', label=col,  color=next(colors))
     
-    custom_plot(x*100, [exact]*len(x), lower_bound, upper_bound, plot_band=False, marker='o', label='True Value',  color=colors.next())
+    custom_plot(x*100, [exact]*len(x), lower_bound, upper_bound, plot_band=False, marker='o', label='True Value',  color=next(colors))
 
 
     # means.plot(yerr=stds)
 
     # plt.title(epsilon)
-    col = color_gen().next()
-    print 'Number of Trials: ', max(df['trial_num'])+1
+    col = next(color_gen())
+    print('Number of Trials: ', max(df['trial_num'])+1)
     ax.legend(loc='upper right')
     ax.grid(alpha=.35)
     # ax.set_title('Probability of exploration: %s' % epsilon)

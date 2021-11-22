@@ -87,7 +87,7 @@ class Program(object):
         maximum = np.max(self.G_exact.avg() - self.constraints)
         index = np.argmax(self.G_exact.avg() - self.constraints) 
 
-        print 'Lambda maximizing lagrangian: %s' % lamb
+        print('Lambda maximizing lagrangian: %s' % lamb)
         return self.lagrangian(self.C, self.G, lamb)
 
     def min_of_lagrangian_over_policy(self, lamb):
@@ -104,9 +104,9 @@ class Program(object):
             num_batches = int(np.ceil(dataset_length/float(batch_size)))
 
             actions = []
-            all_idxs = range(dataset_length)
-            print 'Creating best_response(x\')' 
-            for i in tqdm(range(num_batches)):
+            all_idxs = list(range(dataset_length))
+            print('Creating best_response(x\')') 
+            for i in tqdm(list(range(num_batches))):
                 idxs = all_idxs[(batch_size*i):(batch_size*(i+1))]
                 states = np.rollaxis(self.dataset['frames'][self.dataset['next_states'][idxs]],1,4)
                 actions.append(best_policy([states], x_preprocessed=True))
@@ -129,15 +129,15 @@ class Program(object):
         G_br = np.array(G_br)
 
         if self.env is not None:
-            print 'Calculating exact C, G policy evaluation'
+            print('Calculating exact C, G policy evaluation')
             exact_c, exact_g, performance = self.exact_policy_evaluation.run(best_policy, to_monitor=True)
             if self.env.env_type == 'car': exact_g = np.array(exact_g)[[-1,2]]
 
-        print
-        print 'C(pi(lambda_avg)) Exact: %s, Evaluated: %s, Difference: %s' % (exact_c, C_br, np.abs(C_br-exact_c))
-        print 'G(pi(lambda_avg)) Exact: %s, Evaluated: %s, Difference: %s' % (exact_g, G_br[:-1], np.abs(G_br[:-1]-exact_g))
-        print 'Mean lambda: %s' % lamb
-        print 
+        print()
+        print('C(pi(lambda_avg)) Exact: %s, Evaluated: %s, Difference: %s' % (exact_c, C_br, np.abs(C_br-exact_c)))
+        print('G(pi(lambda_avg)) Exact: %s, Evaluated: %s, Difference: %s' % (exact_g, G_br[:-1], np.abs(G_br[:-1]-exact_g)))
+        print('Mean lambda: %s' % lamb)
+        print() 
 
         return C_br + np.dot(lamb, (G_br - self.constraints)), C_br, G_br, exact_c, exact_g
 
@@ -149,9 +149,9 @@ class Program(object):
             num_batches = int(np.ceil(dataset_length/float(batch_size)))
 
             actions = []
-            all_idxs = range(dataset_length)
-            print 'Creating pi_%s(x\')' % iteration 
-            for i in tqdm(range(num_batches)):
+            all_idxs = list(range(dataset_length))
+            print('Creating pi_%s(x\')' % iteration) 
+            for i in tqdm(list(range(num_batches))):
                 idxs = all_idxs[(batch_size*i):(batch_size*(i+1))]
                 states = np.rollaxis(self.dataset['frames'][self.dataset['next_states'][idxs]],1,4)
                 actions.append(policy([states], x_preprocessed=True))
@@ -181,13 +181,13 @@ class Program(object):
         # Get Exact Policy
         exact_c, exact_g, performance = self.calc_exact(policy)
 
-        print
-        print 'C(pi_%s) Exact: %s, Evaluated: %s, Difference: %s' % (iteration, exact_c, C_pi, np.abs(C_pi-exact_c))
-        print 'G(pi_%s) Exact: %s, Evaluated: %s, Difference: %s' % (iteration, exact_g, G_pis[:-1], np.abs(G_pis[:-1]-exact_g))
-        print 
+        print()
+        print('C(pi_%s) Exact: %s, Evaluated: %s, Difference: %s' % (iteration, exact_c, C_pi, np.abs(C_pi-exact_c)))
+        print('G(pi_%s) Exact: %s, Evaluated: %s, Difference: %s' % (iteration, exact_g, G_pis[:-1], np.abs(G_pis[:-1]-exact_g)))
+        print() 
 
     def calc_exact(self, policy):
-        print 'Calculating exact C, G policy evaluation'
+        print('Calculating exact C, G policy evaluation')
         exact_c, exact_g, performance = self.exact_policy_evaluation.run(policy, to_monitor=True)
         if self.env.env_type == 'car':exact_g = np.array(exact_g)[[-1,2]] 
         self.C_exact.add_exact_values([performance])
@@ -232,9 +232,9 @@ class Program(object):
             c_exact, g_exact = self.C_exact.avg(), self.G_exact.avg()[:-1]
             c_approx, g_approx = self.C.avg(), self.G.avg()[:-1]
 
-            print 'actual max L: %s, min_L: %s, difference: %s' % (x,y,x-y)
-            print 'Average policy. C Exact: %s, C Approx: %s' % (c_exact, c_approx)
-            print 'Average policy. G Exact: %s, G Approx: %s' % (g_exact, g_approx)
+            print('actual max L: %s, min_L: %s, difference: %s' % (x,y,x-y))
+            print('Average policy. C Exact: %s, C Approx: %s' % (c_exact, c_approx))
+            print('Average policy. G Exact: %s, G Approx: %s' % (g_exact, g_approx))
         else:
             if len(lambdas) == 0: return False
             c_exact, g_exact = self.C_exact.avg(), self.G_exact.avg()[:-1]

@@ -44,7 +44,7 @@ class ExactPolicyEvaluator(object):
         else:
             policy_is_greedy= kw['policy_is_greedy']
         
-        if not isinstance(policy,(list,)):
+        if not isinstance(policy,list):
             policy = [policy]
 
 
@@ -57,7 +57,7 @@ class ExactPolicyEvaluator(object):
                     try:
                         return g[i]
                     except:
-                        if isinstance(g,(list,)) and len(g) > 1:
+                        if isinstance(g,list) and len(g) > 1:
                             assert False, 'Index error'
                         else:
                             return g
@@ -72,7 +72,7 @@ class ExactPolicyEvaluator(object):
         for initial_state in initial_states:
             self.env.isd = np.eye(state_space_dim)[initial_state]
 
-            if not isinstance(policy,(list,)):
+            if not isinstance(policy,list):
                 policy = [policy]
             Q.append(self.determinstic_env_and_greedy_policy(policy, render=False, verbose=False)[idx])
         
@@ -123,7 +123,7 @@ class ExactPolicyEvaluator(object):
                     done = done or early_done
                     self.buffer.append(action, x_prime, cost[0], done)
                     
-                    if verbose: print x,action,x_prime,cost
+                    if verbose: print(x,action,x_prime,cost)
                     
                     c.append(cost[0].tolist())
                     g.append(cost[1:].tolist())
@@ -215,13 +215,13 @@ class ExactPolicyEvaluator(object):
 
             if to_monitor: self.monitor.make_video()
             if self.env.env_type in ['car']:  
-                print 'Performance: %s/%s = %s' %  (self.env.tile_visited_count, len(self.env.track), self.env.tile_visited_count/float(len(self.env.track)))
+                print('Performance: %s/%s = %s' %  (self.env.tile_visited_count, len(self.env.track), self.env.tile_visited_count/float(len(self.env.track))))
         # import pdb; pdb.set_trace()
         c = np.mean([self.discounted_sum(x, self.gamma) for x in all_c])
         g = np.mean([ [self.discounted_sum(cost, self.gamma) for cost in np.array(x).T] for x in all_g], axis=0).tolist()
         # g = np.mean([self.discounted_sum(np.array(x), self.gamma) for x in all_g], axis=0).tolist()
 
-        if not isinstance(g,(list,)):
+        if not isinstance(g,list):
             g = [g]
 
         if self.env.env_type in ['car']:  

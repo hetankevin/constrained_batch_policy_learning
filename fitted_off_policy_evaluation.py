@@ -49,7 +49,7 @@ class LakeFittedQEvaluation(FittedAlgo):
         x_prime = x_prime.reshape(-1)
 
         values = []
-        for k in tqdm(range(self.max_epochs), desc=desc):
+        for k in tqdm(list(range(self.max_epochs)), desc=desc):
 
             # {((x,a), r+gamma* Q(x',pi(x')))}
             
@@ -62,7 +62,7 @@ class LakeFittedQEvaluation(FittedAlgo):
             # if (k >= (self.max_epochs-100)): K.set_value(self.Q_k.model.optimizer.lr, 0.00001)
             self.fit(X_a, costs, epochs=epochs, batch_size=X_a.shape[0], epsilon=epsilon, evaluate=False, verbose=0)
             values.append(np.mean([self.Q_k(state, policy(state)) for state in self.initial_states]))
-            print values[-1]
+            print(values[-1])
             # if not self.Q_k.callbacks_list[0].converged:
             #     print 'Continuing training due to lack of convergence'
             #     self.fit(X_a, costs, epochs=epochs, batch_size=X_a.shape[0], epsilon=epsilon, evaluate=False, verbose=0)
@@ -112,7 +112,7 @@ class CarFittedQEvaluation(FittedAlgo):
         # an approximately optimal Q
         
         dataset.set_cost(which_cost, idx=g_idx)
-        print 'Scale: ', dataset.scale
+        print('Scale: ', dataset.scale)
         # try:
         #     initial_states = np.unique([episode.frames[[0]*episode.num_frame_stack] for episode in dataset.episodes], axis=0)
         # except:
@@ -129,11 +129,11 @@ class CarFittedQEvaluation(FittedAlgo):
         self.Q_k.copy_over_to(self.Q_k_minus_1)
         values = []
 
-        for k in tqdm(range(self.max_epochs), desc=desc):
+        for k in tqdm(list(range(self.max_epochs)), desc=desc):
             batch_size = 32
             
             dataset_length = len(dataset)
-            perm = np.random.permutation(range(dataset_length))
+            perm = np.random.permutation(list(range(dataset_length)))
             eighty_percent_of_set = int(1.*len(perm))
             training_idxs = perm[:eighty_percent_of_set]
             validation_idxs = perm[eighty_percent_of_set:]

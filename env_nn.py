@@ -111,7 +111,7 @@ class LakeNN(Model):
 
     def fit(self, X, y, verbose=0, batch_size=512, epochs=1000, evaluate=False, tqdm_verbose=True, additional_callbacks=[], **kw):
 
-        if isinstance(X,(list,)):
+        if isinstance(X,list):
             X = self.representation(X[0].reshape(-1), X[1])
         else:
             X = self.representation(X[:,0], X[:,1])
@@ -217,14 +217,14 @@ class EarlyStoppingByConvergence(Callback):
         
         current = logs.get(self.monitor)
         if current is None:
-            print("Early stopping requires %s available!" % self.monitor)
+            print(("Early stopping requires %s available!" % self.monitor))
             exit()
         else:
             self.losses_so_far.append(current)
 
         if self.verbose:
             if (self.epoch % 100) == 0:
-                print 'Epoch %s, loss: %s' % (epoch, self.losses_so_far[-1])
+                print('Epoch %s, loss: %s' % (epoch, self.losses_so_far[-1]))
         
         if self.use_both:
             if ((len(self.losses_so_far) > 1) and (np.abs(self.losses_so_far[-2] - self.losses_so_far[-1]) < self.epsilon)) or (self.losses_so_far[-1] < self.diff):
@@ -244,9 +244,9 @@ class EarlyStoppingByConvergence(Callback):
         if self.epoch > 1:
             if self.verbose > 0:
                 if self.converged:
-                    print 'Epoch %s: early stopping. Converged. Delta: %s. Loss: %s' % (self.epoch, np.abs(self.losses_so_far[-2] - self.losses_so_far[-1]), self.losses_so_far[-1])
+                    print('Epoch %s: early stopping. Converged. Delta: %s. Loss: %s' % (self.epoch, np.abs(self.losses_so_far[-2] - self.losses_so_far[-1]), self.losses_so_far[-1]))
                 else:
-                    print 'Epoch %s. NOT converged. Delta: %s. Loss: %s' % (self.epoch, np.abs(self.losses_so_far[-2] - self.losses_so_far[-1]), self.losses_so_far[-1])
+                    print('Epoch %s. NOT converged. Delta: %s. Loss: %s' % (self.epoch, np.abs(self.losses_so_far[-2] - self.losses_so_far[-1]), self.losses_so_far[-1]))
 
     def on_train_begin(self, logs=None):
         # Allow instances to be re-used

@@ -53,16 +53,16 @@ policy_old = None
 old_policy_path = os.path.join(model_dir, 'pi_old.h5')
 policy_old = DeepQLearning(env, gamma)
 if not os.path.isfile(old_policy_path):
-    print 'Learning a policy using DQN'
+    print('Learning a policy using DQN')
     policy_old.learn()
     policy_old.Q.model.save(old_policy_path)
-    print policy_old.Q.evaluate(render=True)
+    print(policy_old.Q.evaluate(render=True))
 else:
-    print 'Loading a policy'
+    print('Loading a policy')
     policy_old.Q.model = load_model(old_policy_path)
-    print policy_old.Q.evaluate(render=True)
+    print(policy_old.Q.evaluate(render=True))
 
-print 'Old Policy'
+print('Old Policy')
 PrintPolicy(env=env).pprint(policy_old)
 
 # model_dict = {0: 1, 4: 1, 8: 0}
@@ -79,7 +79,7 @@ for i in range(map_size[0]*map_size[1]):
         model_dict[i] = np.random.randint(action_space_dim)
 policy = FixedPolicy(model_dict, action_space_dim, policy_evaluator)
 
-print 'Evaluate this policy:'
+print('Evaluate this policy:')
 PrintPolicy(env=env).pprint(policy)
 
 #### Problem setup
@@ -176,11 +176,11 @@ def run_trial(policy_old, policy, epochs, epsilon, fqi, fqe, ips, exact_evaluati
     dataset.preprocess()
     dataset_removed.preprocess()
     
-    print 'Distribution:' 
-    print np.histogram(dataset['x'], bins=np.arange(map_size[0]*map_size[1]+1)-.5)[0].reshape(map_size)
+    print('Distribution:') 
+    print(np.histogram(dataset['x'], bins=np.arange(map_size[0]*map_size[1]+1)-.5)[0].reshape(map_size))
 
-    print 'Distribution:' 
-    print np.histogram(dataset['x_prime'], bins=np.arange(map_size[0]*map_size[1]+1)-.5)[0].reshape(map_size)
+    print('Distribution:') 
+    print(np.histogram(dataset['x_prime'], bins=np.arange(map_size[0]*map_size[1]+1)-.5)[0].reshape(map_size))
     
 
     dataset.set_cost('c')
@@ -188,7 +188,7 @@ def run_trial(policy_old, policy, epochs, epsilon, fqi, fqe, ips, exact_evaluati
     
     # Exact
     exact = exact_evaluation.run(policy)[0]
-    print exact
+    print(exact)
 
     # Importance Sampling
     # approx_ips, exact_ips, approx_pdis, exact_pdis = ips.run(dataset, policy, policy_old, epsilon, gamma)
@@ -202,19 +202,19 @@ def run_trial(policy_old, policy, epochs, epsilon, fqi, fqe, ips, exact_evaluati
             evaluated.append(fqe.run(dataset, policy, epochs=5000, epsilon=eps, desc='FQE epsilon %s' % np.round(epsilon,2),position_of_holes=position_of_holes, position_of_goals=position_of_goals))
             PrintPolicy(env=env).pprint(fqe.Q_k)
 
-            print evaluated[-1]
+            print(evaluated[-1])
 
         evaluated = np.mean(evaluated)
-        print evaluated
+        print(evaluated)
 
-        print np.mean((fqe.Q_k(dataset['x'], dataset['a']).T - (dataset['cost'] + gamma*fqe.Q_k(dataset['x_prime'], policy(dataset['x_prime']) )[0]*(1-dataset['done'])))**2)
-        print np.vstack([dataset['x'], dataset['a'], np.round((fqe.Q_k(dataset['x'], dataset['a']).T - (dataset['cost'] + gamma*fqe.Q_k(dataset['x_prime'], policy(dataset['x_prime']) )[0]*(1-dataset['done'])))**2, 2)]).T
+        print(np.mean((fqe.Q_k(dataset['x'], dataset['a']).T - (dataset['cost'] + gamma*fqe.Q_k(dataset['x_prime'], policy(dataset['x_prime']) )[0]*(1-dataset['done'])))**2))
+        print(np.vstack([dataset['x'], dataset['a'], np.round((fqe.Q_k(dataset['x'], dataset['a']).T - (dataset['cost'] + gamma*fqe.Q_k(dataset['x_prime'], policy(dataset['x_prime']) )[0]*(1-dataset['done'])))**2, 2)]).T)
         if len(dataset_removed['x']) > 0:
-            print np.mean((fqe.Q_k(dataset_removed['x'], dataset_removed['a']).T - (dataset_removed['cost'] + gamma*fqe.Q_k(dataset_removed['x_prime'], policy(dataset_removed['x_prime']))[0]*(1-dataset_removed['done'])))**2)
+            print(np.mean((fqe.Q_k(dataset_removed['x'], dataset_removed['a']).T - (dataset_removed['cost'] + gamma*fqe.Q_k(dataset_removed['x_prime'], policy(dataset_removed['x_prime']))[0]*(1-dataset_removed['done'])))**2))
 
     df = pd.DataFrame(np.vstack([dataset['x'], dataset['a'], dataset['x_prime'], dataset['cost'], dataset['done'], np.round(fqe.Q_k(dataset['x'], dataset['a']),3).T, np.around(dataset['cost'] + gamma*fqe.Q_k(dataset['x_prime'], policy(dataset['x_prime'])).T*(1-dataset['done']),2)  , (fqe.Q_k(dataset['x'], dataset['a']).T - (dataset['cost'] + gamma*fqe.Q_k(dataset['x_prime'], policy(dataset['x_prime'])).T*(1-dataset['done']) ))  ]).T, columns = ['x','a','x_prime','c','done','Q(x,a)', 'Q(x_,pi(x_))', 'diff'])
     df_outside = pd.DataFrame(np.vstack([dataset_removed['x'], dataset_removed['a'], dataset_removed['x_prime'], dataset_removed['cost'], dataset_removed['done'], np.round(fqe.Q_k(dataset_removed['x'], dataset_removed['a']),3).T, np.around(dataset_removed['cost'] + gamma*fqe.Q_k(dataset_removed['x_prime'], policy(dataset_removed['x_prime'])).T*(1-dataset_removed['done']),2)  , (fqe.Q_k(dataset_removed['x'], dataset_removed['a']).T - (dataset_removed['cost'] + gamma*fqe.Q_k(dataset_removed['x_prime'], policy(dataset_removed['x_prime'])).T*(1-dataset_removed['done']) ))  ]).T, columns = ['x','a','x_prime','c','done','Q(x,a)', 'Q(x_,pi(x_))', 'diff'])
-    print exact, evaluated
+    print(exact, evaluated)
 
     return exact-exact, evaluated-exact
 
@@ -248,10 +248,10 @@ for epsilon, group in df.groupby('epsilon'):
     del means['trial_num']
     del stds['trial_num']
 
-    print '*'*20
-    print 'Epsilon: %s' % epsilon
-    print means
-    print stds
+    print('*'*20)
+    print('Epsilon: %s' % epsilon)
+    print(means)
+    print(stds)
 
     fig, ax = plt.subplots(1)
     colors = ['red', 'green', 'blue']
